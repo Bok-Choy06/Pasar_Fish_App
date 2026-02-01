@@ -17,9 +17,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
 st.markdown("""
     <style>
+    /* FIX 3: Remove the white bar at the top of the page */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
     .main {
         padding: 2rem;
     }
@@ -43,13 +48,19 @@ st.markdown("""
         text-align: center;
         margin: 2rem 0;
     }
+    
+    /* FIX 1 (Part A): Restrict CSS-based image height */
     .question-image {
         display: block;
-        margin: 2rem auto;
-        max-width: 50%;
+        margin: 1rem auto; /* Reduced margin */
+        max-width: 100%;
+        max-height: 300px; /* NEW: Limits height so you don't have to scroll */
+        object-fit: contain; /* NEW: Keeps the image aspect ratio */
+        width: auto; /* NEW: Allows width to shrink if needed */
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
+    
     .metric-card {
         background-color: #f8f9fa;
         padding: 1.5rem;
@@ -62,6 +73,16 @@ st.markdown("""
         padding: 2rem;
         border-radius: 10px;
         margin: 1rem 0;
+    }
+    
+    /* FIX 2: Change Response Font Size */
+    /* Targets the radio button text. 16px is approx 2 'steps' smaller than the default H3 header */
+    .stRadio p {
+        font-size: 16px !important;
+    }
+    div[role="radiogroup"] label > div:first-child {
+        /* Optional: adjust spacing between radio options if needed */
+        margin-bottom: 10px; 
     }
     </style>
     """, unsafe_allow_html=True)
@@ -440,7 +461,9 @@ def question_page(question_num):
         else:
             # Local file
             if os.path.exists(q_data['image']):
-                st.image(q_data['image'], use_container_width=True)
+                # FIX 1 (Part B): Changed use_container_width=True to a fixed width
+                # 350-400px is usually a good size to avoid scrolling
+                st.image(q_data['image'], width=400) 
             else:
                 st.info(f"Image not found: {q_data['image']}")
     
