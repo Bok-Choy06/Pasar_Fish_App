@@ -52,11 +52,11 @@ st.markdown("""
     /* FIX 1 (Part A): Restrict CSS-based image height */
     .question-image {
         display: block;
-        margin: 1rem auto; /* Reduced margin */
-        max-width: 100%;
-        max-height: 1000px; /* NEW: Limits height so you don't have to scroll */
-        object-fit: contain; /* NEW: Keeps the image aspect ratio */
-        width: 1000px;
+        margin: 1rem auto;
+        width: 1000px;        /* fixed size */
+        max-width: 100%;     /* prevents overflow on small screens */
+        max-height: 1000px;
+        object-fit: contain;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
