@@ -35,13 +35,6 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #45a049;
     }
-    .result-box {
-        padding: 2rem;
-        border-radius: 10px;
-        background-color: #f0f2f6;
-        text-align: center;
-        margin: 2rem 0;
-    }
     .question-image {
         display: block;
         margin: 2rem auto;
@@ -441,7 +434,7 @@ def question_page(question_num):
             if os.path.exists(q_data['image']):
                 # FIX 1 (Part B): Changed use_container_width=True to a fixed width
                 # 350-400px is usually a good size to avoid scrolling
-                st.image(q_data['image'], width=400) 
+                st.image(q_data['image'], width=600) 
             else:
                 st.info(f"Image not found: {q_data['image']}")
     
