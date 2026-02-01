@@ -35,6 +35,13 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #45a049;
     }
+    .result-box {
+        padding: 2rem;
+        border-radius: 10px;
+        background-color: #f0f2f6;
+        text-align: center;
+        margin: 2rem 0;
+    }
     .question-image {
         display: block;
         margin: 2rem auto;
@@ -423,6 +430,9 @@ def question_page(question_num):
     
     # Question text
     st.markdown(f"### {q_data['text']}")
+
+    # Close container
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Image (if provided)
     if q_data['image']:
