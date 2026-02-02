@@ -768,8 +768,8 @@ def analytics_page():
     st.markdown(
         """
         <div style="text-align: center; margin-bottom: 2rem;">
-            <h1>📊 Analytics Dashboard</h1>
-            <h3>Fish Quiz Statistics & Insights</h3>
+            <h1>📊 Pasarfish Analytics Dashboard</h1>
+            <h3>For All Your Fish Quiz Statistics & Insights!</h3>
         </div>
         """,
         unsafe_allow_html=True
