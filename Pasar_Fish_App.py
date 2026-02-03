@@ -929,7 +929,7 @@ def analytics_page():
     
     with col1:
         # Pie chart
-        type_counts = df['fish_names'].value_counts()
+        type_counts = df['MBTI_Type'].value_counts()
         fig_pie = px.pie(
             values=type_counts.values,
             names=type_counts.index,
