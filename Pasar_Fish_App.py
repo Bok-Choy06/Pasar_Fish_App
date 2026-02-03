@@ -376,8 +376,9 @@ def create_share_buttons(mbti_type, share_source="result_page"):
             </div>
         """.format(whatsapp_url), unsafe_allow_html=True)
     
-    # Telegram - icon only with pre-filled message
+    # 2. Update your Telegram logic
     with col6:
+        # Telegram will now take the 'url' parameter and the 'text' separately
         telegram_url = f"https://t.me/share/url?url={quote(app_url)}&text={quote(share_text)}"
         st.markdown("""
             <div style="text-align: center;">
@@ -392,7 +393,7 @@ def create_share_buttons(mbti_type, share_source="result_page"):
     # Helper text
     st.markdown("""
         <div style="text-align: center; margin-top: 1rem; color: #888; font-size: 12px;">
-            💡 Click any icon to share your result! For Instagram, screenshot this page and post.
+            💡 Click on the icons to share your result! For Instagram, screenshot this page and post.
         </div>
     """, unsafe_allow_html=True)
     
