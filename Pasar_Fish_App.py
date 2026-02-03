@@ -279,29 +279,41 @@ countries = [
 def create_share_buttons(mbti_type, share_source="result_page"):
     """Create social media share buttons and track clicks"""
     
-    # URLs for your app - UPDATE THIS AFTER DEPLOYMENT
+    # Get your actual deployed app URL - UPDATE THIS!
     app_url = "https://your-app-url.streamlit.app"
+    
+    # Share text without the fish image (images don't work in URL shares)
     share_text = f"I just discovered I'm a {mbti_type} fish! 🐟 Take the quiz to find out which local fish matches your personality:"
     
     st.markdown("### 📢 Share Your Results!")
     
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     
-    # Instagram
+    # Copy Link
     with col1:
-        instagram_url = f"https://www.instagram.com/"
         st.markdown("""
             <div style="text-align: center;">
-                <a href="{}" target="_blank" style="text-decoration: none;">
-                    <i class="fab fa-instagram" style="font-size: 32px; color: #E4405F;"></i>
-                </a>
-                <br><br>
-                <p style="font-size: 12px; color: #888;">Screenshot to share!</p>
+                <i class="fas fa-link" style="font-size: 32px; color: #666;"></i>
             </div>
-        """.format(instagram_url), unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+        if st.button("Copy", key="copy_btn", use_container_width=True):
+            st.code(app_url, language=None)
+            st.success("📋 Copy the link above!")
+            track_share("Copy Link", mbti_type, share_source)
     
-    # X (Twitter)
+    # Instagram - can't auto-share, user needs to screenshot
     with col2:
+        st.markdown("""
+            <div style="text-align: center;">
+                <i class="fab fa-instagram" style="font-size: 32px; color: #E4405F;"></i>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Share", key="instagram_btn", use_container_width=True):
+            st.info("📸 Screenshot this page and share to your Instagram Story!")
+            track_share("Instagram", mbti_type, share_source)
+    
+    # X (Twitter) - properly formatted
+    with col3:
         x_url = f"https://twitter.com/intent/tweet?text={quote(share_text)}&url={quote(app_url)}"
         st.markdown("""
             <div style="text-align: center;">
@@ -310,9 +322,12 @@ def create_share_buttons(mbti_type, share_source="result_page"):
                 </a>
             </div>
         """.format(x_url), unsafe_allow_html=True)
+        if st.button("Share", key="x_btn", use_container_width=True):
+            track_share("X", mbti_type, share_source)
+            st.markdown(f'<a href="{x_url}" target="_blank">Click here to open X/Twitter →</a>', unsafe_allow_html=True)
     
-    # LinkedIn
-    with col3:
+    # LinkedIn - properly formatted
+    with col4:
         linkedin_url = f"https://www.linkedin.com/sharing/share-offsite/?url={quote(app_url)}"
         st.markdown("""
             <div style="text-align: center;">
@@ -321,9 +336,12 @@ def create_share_buttons(mbti_type, share_source="result_page"):
                 </a>
             </div>
         """.format(linkedin_url), unsafe_allow_html=True)
+        if st.button("Share", key="linkedin_btn", use_container_width=True):
+            track_share("LinkedIn", mbti_type, share_source)
+            st.markdown(f'<a href="{linkedin_url}" target="_blank">Click here to open LinkedIn →</a>', unsafe_allow_html=True)
     
     # WhatsApp
-    with col4:
+    with col5:
         whatsapp_url = f"https://wa.me/?text={quote(share_text + ' ' + app_url)}"
         st.markdown("""
             <div style="text-align: center;">
@@ -332,9 +350,12 @@ def create_share_buttons(mbti_type, share_source="result_page"):
                 </a>
             </div>
         """.format(whatsapp_url), unsafe_allow_html=True)
+        if st.button("Share", key="whatsapp_btn", use_container_width=True):
+            track_share("WhatsApp", mbti_type, share_source)
+            st.markdown(f'<a href="{whatsapp_url}" target="_blank">Click here to open WhatsApp →</a>', unsafe_allow_html=True)
     
     # Telegram
-    with col5:
+    with col6:
         telegram_url = f"https://t.me/share/url?url={quote(app_url)}&text={quote(share_text)}"
         st.markdown("""
             <div style="text-align: center;">
@@ -343,9 +364,11 @@ def create_share_buttons(mbti_type, share_source="result_page"):
                 </a>
             </div>
         """.format(telegram_url), unsafe_allow_html=True)
+        if st.button("Share", key="telegram_btn", use_container_width=True):
+            track_share("Telegram", mbti_type, share_source)
+            st.markdown(f'<a href="{telegram_url}" target="_blank">Click here to open Telegram →</a>', unsafe_allow_html=True)
     
-    # Track shares (optional - happens in background)
-    st.markdown('<div style="height: 20px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="margin-top: 1rem; text-align: center; color: #888; font-size: 12px;">💡 Tip: Click the icon or Share button to open the platform</div>', unsafe_allow_html=True)
 
 def track_share(platform, mbti_type, source):
     """Track share button clicks to Google Sheets"""
@@ -861,11 +884,11 @@ def analytics_page():
     
     with col2:
         unique_types = df['MBTI_Type'].nunique()
-        st.metric("Unique MBTI Types", unique_types)
+        st.metric("Unique Fish Types", unique_types)
     
     with col3:
         most_common = df['MBTI_Type'].mode()[0] if len(df) > 0 else "N/A"
-        st.metric("Most Common Type", most_common)
+        st.metric("Most Common Fish", most_common)
     
     with col4:
         today_responses = len(df[pd.to_datetime(df['Timestamp']).dt.date == datetime.now().date()])
@@ -874,7 +897,7 @@ def analytics_page():
     st.markdown("---")
     
     # MBTI Type Distribution
-    st.markdown("## 🎯 MBTI Type Distribution")
+    st.markdown("## 🎯 Fish Type Distribution")
     
     col1, col2 = st.columns(2)
     
@@ -884,7 +907,7 @@ def analytics_page():
         fig_pie = px.pie(
             values=type_counts.values,
             names=type_counts.index,
-            title="MBTI Types Distribution",
+            title="Fish Types Distribution",
             color_discrete_sequence=px.colors.qualitative.Set3
         )
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -894,8 +917,8 @@ def analytics_page():
         fig_bar = px.bar(
             x=type_counts.index,
             y=type_counts.values,
-            title="MBTI Types Count",
-            labels={'x': 'MBTI Type', 'y': 'Count'},
+            title="Fish Types Count",
+            labels={'x': 'Fish Type', 'y': 'Count'},
             color=type_counts.values,
             color_continuous_scale='Viridis'
         )
