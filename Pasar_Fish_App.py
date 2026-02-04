@@ -880,54 +880,6 @@ def show_results():
             </div>
         </div>
     """, unsafe_allow_html=True)
- 
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-            <div style="text-align: center; padding: 1rem;">
-                <a href="https://pasarfish.com" target="_blank" style="text-decoration: none;">
-                    <i class="fas fa-globe" style="font-size: 32px; color: #4CAF50;"></i>
-                    <br><br>
-                    <span style="font-size: 14px; color: #4A90E2;">Pasarfish.com</span>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-            <div style="text-align: center; padding: 1rem;">
-                <a href="https://instagram.com/pasarfishsg" target="_blank" style="text-decoration: none;">
-                    <i class="fab fa-instagram" style="font-size: 32px; color: #E4405F;"></i>
-                    <br><br>
-                    <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-            <div style="text-align: center; padding: 1rem;">
-                <a href="https://linkedin.com/company/pasarfish" target="_blank" style="text-decoration: none;">
-                    <i class="fab fa-linkedin" style="font-size: 32px; color: #0077B5;"></i>
-                    <br><br>
-                    <span style="font-size: 14px; color: #4A90E2;">@Pasarfish</span>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown("""
-            <div style="text-align: center; padding: 1rem;">
-                <a href="https://www.facebook.com/p/Pasarfishsg-61568193013803/" target="_blank" style="text-decoration: none;">
-                    <i class="fab fa-facebook" style="font-size: 32px; color: #1877F2;"></i>
-                    <br><br>
-                    <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
     
     # Share buttons (existing code continues here)
     
