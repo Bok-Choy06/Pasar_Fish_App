@@ -1,3 +1,4 @@
+import base64
 import streamlit as st
 import pandas as pd
 import gspread
@@ -508,26 +509,39 @@ def demographics_page():
         <h1 style="text-align: center;">🐟 Which Local Fish Are You?</h1>
     """, unsafe_allow_html=True)
     
-    # White background wrapper - open
-    st.markdown("""
-        <div style="background-color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 2rem auto; max-width: 800px;">
-    """, unsafe_allow_html=True)
-    
-    # Center-aligned image using columns
-    col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        if os.path.exists('Pasar Fish.png'):
-            st.image('Pasar Fish.png', use_container_width=True)
-        elif os.path.exists('images/Pasar Fish.png'):
-            st.image('images/Pasar Fish.png', use_container_width=True)
-        elif os.path.exists('Pasar Fish.jpg'):
-            st.image('Pasar Fish.jpg', use_container_width=True)
-        elif os.path.exists('images/Pasar Fish.jpg'):
-            st.image('images/Pasar Fish.jpg', use_container_width=True)
-    
-    # White background wrapper - close
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Create white box using Streamlit container
+    with st.container():
+        # Apply white background styling
+        st.markdown("""
+            <style>
+            .landing-image-container {
+                background-color: white;
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin: 2rem auto;
+                max-width: 700px;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        # Wrapper div
+        st.markdown('<div class="landing-image-container">', unsafe_allow_html=True)
+        
+        # Image centered using columns
+        col1, col2, col3 = st.columns([1, 3, 1])
+        with col2:
+            if os.path.exists('Pasar Fish.png'):
+                st.image('Pasar Fish.png', use_container_width=True)
+            elif os.path.exists('images/Pasar Fish.png'):
+                st.image('images/Pasar Fish.png', use_container_width=True)
+            elif os.path.exists('Pasar Fish.jpg'):
+                st.image('Pasar Fish.jpg', use_container_width=True)
+            elif os.path.exists('images/Pasar Fish.jpg'):
+                st.image('images/Pasar Fish.jpg', use_container_width=True)
+        
+        # Close wrapper
+        st.markdown('</div>', unsafe_allow_html=True)
     
     # Center-aligned text
     st.markdown("""
