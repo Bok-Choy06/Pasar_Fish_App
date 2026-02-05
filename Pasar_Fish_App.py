@@ -350,7 +350,7 @@ def create_share_buttons(mbti_type, share_source="result_page"):
     
     app_url = "https://pasarfishapp-eu7kqgndtsmiy9pwfz9zrr.streamlit.app/"
     fish_name = fish_names.get(mbti_type, mbti_type)
-    share_text_with_url = "I just discovered I'm a " + fish_name + " 🐟. Take the Pasar Fish quiz today to find out which local fish matches your personality! \n" + app_url +"
+    share_text_with_url = "I just discovered I'm a " + fish_name + " 🐟. Take the Pasar Fish quiz today to find out which local fish matches your personality!\n" + app_url
     share_text = "I just discovered I'm a " + fish_name + " 🐟. Take the Pasar Fish quiz today to find out which local fish matches your personality!"
     
     x_url = "https://twitter.com/intent/tweet?text=" + quote(share_text_with_url)
