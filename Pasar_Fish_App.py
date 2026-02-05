@@ -885,7 +885,10 @@ def show_results():
     st.info(f"⏱️ Completed in: {time_str}")
     
     st.markdown("## 🎉 Your Fish!")
-    
+
+    # Display fish image instead of MBTI type text
+    fish_image_path = fish_images.get(mbti_type)
+
     if fish_image_path and os.path.exists(fish_image_path):
         # Display the fish image at full width
         st.image(fish_image_path, use_container_width=True)
