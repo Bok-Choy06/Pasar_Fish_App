@@ -811,7 +811,7 @@ def question_page(question_num):
         st.session_state.question_start_times[q_id] = datetime.now()
     
     # Compact title
-    st.markdown(f'<h2 style="text-align: center; margin: 0.5rem 0;">🐟 Which Local Fish Are You?</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 style="text-align: center; margin: 0.5rem 0;">🐟 Which Local Fish Are You?</h1>', unsafe_allow_html=True)
     
     show_progress()
     
