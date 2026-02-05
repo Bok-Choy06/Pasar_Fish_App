@@ -368,22 +368,22 @@ def create_share_buttons(mbti_type, share_source="result_page"):
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + x_url + """" target="_blank">
+                    <a href=""" + x_url + """ target="_blank">
                         <i class="fab fa-x-twitter" style="font-size: 48px; color: #000000;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + linkedin_url + """" target="_blank">
+                    <a href=""" + linkedin_url + """ target="_blank">
                         <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + whatsapp_url + """" target="_blank">
+                    <a href=""" + whatsapp_url + """ target="_blank">
                         <i class="fab fa-whatsapp" style="font-size: 48px; color: #25D366;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + telegram_url + """" target="_blank">
+                    <a href=""" + telegram_url + """ target="_blank">
                         <i class="fab fa-telegram" style="font-size: 48px; color: #0088cc;"></i>
                     </a>
                 </div>
