@@ -977,6 +977,18 @@ def show_results():
     col1, col2, col3 = st.columns([1.5, 1, 1.5])
     with col2:
         if st.button("🔄 Retake Quiz", use_container_width=True):
+            # Reset everything
+            st.session_state.current_step = 0
+            st.session_state.answers = {}
+            st.session_state.demographics = {}
+            st.session_state.survey_complete = False
+            st.session_state.mbti_result = None
+            st.session_state.start_time = datetime.now()
+            st.session_state.question_start_times = {}
+            st.session_state.question_durations = {}
+            if 'demographics_start_time' in st.session_state:
+                del st.session_state.demographics_start_time
+            st.rerun()
     
     # Share buttons
     create_share_buttons(mbti_type)
