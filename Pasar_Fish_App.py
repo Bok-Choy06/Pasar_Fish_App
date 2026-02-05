@@ -589,6 +589,17 @@ def demographics_page():
         key="referral_select"
     )
     
+    # PDPA Consent Checkbox - REQUIRED
+    st.markdown("---")
+    st.markdown("### 📋 Data Privacy Consent")
+    
+    pdpa_consent = st.checkbox(
+        "I consent to the collection, use, and disclosure of my personal data in accordance with Singapore's Personal Data Protection Act (PDPA) for the purposes of this survey and research. *",
+        key="pdpa_consent"
+    )
+    
+    st.caption("By checking this box, you agree that your responses may be stored and analyzed anonymously for research purposes.")
+    
     st.markdown("---")
     
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -607,17 +618,21 @@ def demographics_page():
             if referral_source == "Select an option":
                 st.error("❌ Please tell us how you heard about this test")
                 return
+            if not pdpa_consent:
+                st.error("❌ Please provide consent to proceed with the survey")
+                return
             
             # Calculate time spent on demographics
             demographics_duration = (datetime.now() - st.session_state.demographics_start_time).total_seconds()
             
-            # Save demographics
+            # Save demographics (including consent)
             st.session_state.demographics = {
                 'age': age,
                 'gender': gender,
                 'country': country if country else "Not specified",
                 'occupation': occupation,
                 'referral_source': referral_source,
+                'pdpa_consent': 'Yes',  # Only saved if they checked it
                 'demographics_time': round(demographics_duration, 2)
             }
             
