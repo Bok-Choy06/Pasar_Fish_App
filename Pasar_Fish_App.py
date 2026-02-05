@@ -635,40 +635,39 @@ def question_page(question_num):
     if q_id not in st.session_state.question_start_times:
         st.session_state.question_start_times[q_id] = datetime.now()
     
-    st.title("🐟 Which Local Fish Are You?")
+    # Compact title
+    st.markdown(f'<h2 style="text-align: center; margin: 0.5rem 0;">🐟 Which Local Fish Are You?</h2>', unsafe_allow_html=True)
     
     show_progress()
     
     st.markdown("---")
     
-    # Question text
-    st.markdown(f"### {q_data['text']}")
+    # COMPACT question container with viewport constraints
+    st.markdown(f'<div style="max-height: 70vh; overflow: visible;">', unsafe_allow_html=True)
     
-    # Image (if provided)
+    # Question text - more compact
+    st.markdown(f'<div style="background-color: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 0.5rem 0;">', unsafe_allow_html=True)
+    st.markdown(f"### {q_data['text']}")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Image - constrained height
     if q_data['image']:
         if q_data['image'].startswith('http'):
-            # URL image
-            st.markdown(f'<img src="{q_data["image"]}" class="question-image" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{q_data["image"]}" style="max-width: 100%; max-height: 30vh; display: block; margin: 0.5rem auto; border-radius: 10px;" />', unsafe_allow_html=True)
         else:
-            # Local file
             if os.path.exists(q_data['image']):
-                # FIX 1 (Part B): Changed use_container_width=True to a fixed width
-                # 350-400px is usually a good size to avoid scrolling
-                st.image(q_data['image'], width=600) 
-            else:
-                st.info(f"Image not found: {q_data['image']}")
+                # Use columns to center and constrain
+                col1, col2, col3 = st.columns([1, 3, 1])
+                with col2:
+                    st.image(q_data['image'], use_container_width=True)
     
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown("---")
-    
-    # Answer options
+    # Answer options - compact
     st.markdown("### Choose one:")
     
-    # Get current answer if exists
     current_answer = st.session_state.answers.get(q_id)
     
-    # Create radio buttons
     answer = st.radio(
         "Select your answer:",
         options=list(q_data['options'].keys()),
@@ -678,7 +677,6 @@ def question_page(question_num):
         label_visibility="collapsed"
     )
     
-    # Save answer
     st.session_state.answers[q_id] = answer
     
     st.markdown("---")
