@@ -154,6 +154,27 @@ st.markdown("""
             padding: 0 !important;
         }
     }
+
+    /* Remove top padding/margin from main container */
+    .main .block-container {
+        padding-top: 1rem !important;
+    }
+    
+    /* Remove extra space above title */
+    h1 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    /* Streamlit default header spacing removal */
+    .stApp header {
+        background-color: transparent;
+    }
+    
+    /* Remove top padding from app */
+    section.main > div {
+        padding-top: 1rem !important;
+    }
     
     </style>
     """, unsafe_allow_html=True)
@@ -521,28 +542,28 @@ def show_follow_section():
             <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 2rem;">
                 <div style="text-align: center; padding: 1rem;">
                     <a href="https://pasarfish.com" target="_blank" style="text-decoration: none;">
-                        <i class="fas fa-globe" style="font-size: 32px; color: #4CAF50;"></i>
+                        <i class="fas fa-globe" style="font-size: 48px; color: #4CAF50;"></i>
                         <br><br>
                         <span style="font-size: 14px; color: #4A90E2;">Pasarfish.com</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
                     <a href="https://instagram.com/pasarfishsg" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-instagram" style="font-size: 32px; color: #E4405F;"></i>
+                        <i class="fab fa-instagram" style="font-size: 48px; color: #E4405F;"></i>
                         <br><br>
                         <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
                     <a href="https://linkedin.com/company/pasarfish" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-linkedin" style="font-size: 32px; color: #0077B5;"></i>
+                        <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
                         <br><br>
                         <span style="font-size: 14px; color: #4A90E2;">@Pasarfish</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
                     <a href="https://www.facebook.com/p/Pasarfishsg-61568193013803/" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-facebook" style="font-size: 32px; color: #1877F2;"></i>
+                        <i class="fab fa-facebook" style="font-size: 48px; color: #1877F2;"></i>
                         <br><br>
                         <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
                     </a>
@@ -970,8 +991,6 @@ def show_results():
             <p style="color: #888;">Fish image not found. Please upload: {fish_image_path}</p>
         </div>
         """, unsafe_allow_html=True)
-      
-    st.markdown("---")
 
     # Retake button - smaller and centered
     col1, col2, col3 = st.columns([1.5, 1, 1.5])
