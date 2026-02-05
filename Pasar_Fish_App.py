@@ -706,9 +706,7 @@ def question_page(question_num):
     st.markdown(f'<div style="max-height: 70vh; overflow: visible;">', unsafe_allow_html=True)
     
     # Question text - more compact
-    st.markdown(f'<div style="background-color: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 0.5rem 0;">', unsafe_allow_html=True)
     st.markdown(f"### {q_data['text']}")
-    st.markdown('</div>', unsafe_allow_html=True)
     
     # Image - constrained height
     if q_data['image']:
