@@ -139,19 +139,30 @@ st.markdown("""
         }
     }
 
-    /* Force navigation buttons side-by-side on mobile */
+    /* Force navigation buttons side-by-side on mobile - IMPROVED */
     @media (max-width: 768px) {
-        [data-testid="column"] {
-            width: 50% !important;
-            flex: 1 1 50% !important;
+        /* Make columns display horizontally */
+        div[data-testid="column"] {
+            width: calc(50% - 0.5rem) !important;
+            flex: 1 1 auto !important;
             min-width: 0 !important;
         }
         
-        /* Specifically for 3-column layouts (Previous, empty, Next) */
-        div[data-testid="column"]:nth-child(2) {
-            width: 0% !important;
-            flex: 0 0 0% !important;
-            padding: 0 !important;
+        /* Hide the middle empty column on mobile */
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) {
+            display: none !important;
+        }
+        
+        /* Force parent container to be horizontal */
+        div[data-testid="stHorizontalBlock"] {
+            flex-direction: row !important;
+            gap: 1rem !important;
+        }
+        
+        /* Make buttons smaller text on mobile */
+        .stButton > button {
+            font-size: 0.9rem !important;
+            padding: 0.5rem 1rem !important;
         }
     }
 
