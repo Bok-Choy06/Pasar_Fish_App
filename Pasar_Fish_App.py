@@ -1053,6 +1053,10 @@ def survey_page():
 
 def analytics_page():
     """Analytics dashboard page"""
+
+    # Map MBTI types to fish names in the dataframe
+    df['Fish_Name'] = df['MBTI_Type'].map(fish_names)
+    
     st.markdown(
         """
         <div style="text-align: center; margin-bottom: 2rem;">
@@ -1083,8 +1087,9 @@ def analytics_page():
         st.metric("Unique Fish Types", unique_types)
     
     with col3:
-        most_common = df['MBTI_Type'].mode()[0] if len(df) > 0 else "N/A"
-        st.metric("Most Common Fish", most_common)
+        most_common_mbti = df['MBTI_Type'].mode()[0] if len(df) > 0 else "N/A"
+        most_common_fish = fish_names.get(most_common_mbti, most_common_mbti)
+        st.metric("Most Common Fish", most_common_fish)
     
     with col4:
         today_responses = len(df[pd.to_datetime(df['Timestamp']).dt.date == datetime.now().date()])
@@ -1098,18 +1103,19 @@ def analytics_page():
     col1, col2 = st.columns(2)
     
     with col1:
-        # Pie chart
-        type_counts = df['MBTI_Type'].value_counts()
+        # Pie chart with fish names
+        type_counts = df['Fish_Name'].value_counts()
         fig_pie = px.pie(
             values=type_counts.values,
             names=type_counts.index,
             title="Fish Types Distribution",
             color_discrete_sequence=px.colors.qualitative.Set3
         )
+        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_pie, use_container_width=True)
     
     with col2:
-        # Bar chart
+        # Bar chart with fish names
         fig_bar = px.bar(
             x=type_counts.index,
             y=type_counts.values,
@@ -1118,6 +1124,7 @@ def analytics_page():
             color=type_counts.values,
             color_continuous_scale='Viridis'
         )
+        fig_bar.update_xaxes(tickangle=-45)
         st.plotly_chart(fig_bar, use_container_width=True)
     
     st.markdown("---")
@@ -1348,26 +1355,262 @@ def analytics_page():
                 for idx, row in time_df_sorted.tail(3).iterrows():
                     st.write(f"{row['Question']}: {row['Average Time (seconds)']:.1f}s")
             
-            # Time by MBTI type
+            # Time by Fish Type
             st.markdown("### 🐟 Completion Time by Fish Type")
             
-            time_by_type = df.groupby('MBTI_Type')['Total_Survey_Time'].agg(['mean', 'count']).reset_index()
+            time_by_type = df.groupby('Fish_Name')['Total_Survey_Time'].agg(['mean', 'count']).reset_index()
             time_by_type = time_by_type[time_by_type['count'] >= 2]  # Only show types with 2+ responses
             time_by_type = time_by_type.sort_values('mean', ascending=False)
             
             if len(time_by_type) > 0:
                 fig_type_time = px.bar(
                     time_by_type,
-                    x='MBTI_Type',
+                    x='Fish_Name',
                     y='mean',
-                    title="Average Completion Time by Personality Type",
-                    labels={'mean': 'Average Time (seconds)', 'MBTI_Type': 'Fish Type'},
+                    title="Average Completion Time by Fish Type",
+                    labels={'mean': 'Average Time (seconds)', 'Fish_Name': 'Fish Type'},
                     color='mean',
                     color_continuous_scale='Sunset'
                 )
+                fig_type_time.update_xaxes(tickangle=-45)
                 st.plotly_chart(fig_type_time, use_container_width=True)
     else:
         st.info("⏱️ Time tracking data not available for this dataset.")
+
+    st.markdown("---")
+    
+    # 1. DEMOGRAPHICS VS FISH TYPE ANALYSIS
+    st.markdown("## 🔬 Demographics & Fish Type Correlations")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Age vs Fish Type
+        st.markdown("### Age Distribution by Fish Type")
+        age_fish_crosstab = pd.crosstab(df['Age'], df['Fish_Name'])
+        fig_age_fish = px.imshow(
+            age_fish_crosstab,
+            labels=dict(x="Fish Type", y="Age Range", color="Count"),
+            title="Age vs Fish Type Heatmap",
+            color_continuous_scale='Blues',
+            aspect='auto'
+        )
+        fig_age_fish.update_xaxes(tickangle=-45)
+        st.plotly_chart(fig_age_fish, use_container_width=True)
+    
+    with col2:
+        # Gender vs Fish Type
+        st.markdown("### Gender Distribution by Fish Type")
+        gender_fish_crosstab = pd.crosstab(df['Gender'], df['Fish_Name'])
+        fig_gender_fish = px.imshow(
+            gender_fish_crosstab,
+            labels=dict(x="Fish Type", y="Gender", color="Count"),
+            title="Gender vs Fish Type Heatmap",
+            color_continuous_scale='Purples',
+            aspect='auto'
+        )
+        fig_gender_fish.update_xaxes(tickangle=-45)
+        st.plotly_chart(fig_gender_fish, use_container_width=True)
+    
+    # Occupation vs Fish Type
+    st.markdown("### Occupation Distribution by Fish Type")
+    occupation_fish_crosstab = pd.crosstab(df['Occupation'], df['Fish_Name'])
+    fig_occ_fish = px.imshow(
+        occupation_fish_crosstab,
+        labels=dict(x="Fish Type", y="Occupation", color="Count"),
+        title="Occupation vs Fish Type Heatmap",
+        color_continuous_scale='Greens',
+        aspect='auto'
+    )
+    fig_occ_fish.update_xaxes(tickangle=-45)
+    st.plotly_chart(fig_occ_fish, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # 2. GEOGRAPHIC ANALYSIS
+    st.markdown("## 🌍 Geographic Distribution")
+    
+    if 'Country' in df.columns and df['Country'].notna().sum() > 0:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Top countries
+            country_counts = df['Country'].value_counts().head(10)
+            fig_countries = px.bar(
+                x=country_counts.values,
+                y=country_counts.index,
+                orientation='h',
+                title="Top 10 Countries",
+                labels={'x': 'Number of Responses', 'y': 'Country'},
+                color=country_counts.values,
+                color_continuous_scale='Teal'
+            )
+            st.plotly_chart(fig_countries, use_container_width=True)
+        
+        with col2:
+            # Fish type by top countries
+            top_countries = df['Country'].value_counts().head(5).index
+            df_top_countries = df[df['Country'].isin(top_countries)]
+            
+            country_fish = pd.crosstab(df_top_countries['Country'], df_top_countries['Fish_Name'])
+            fig_country_fish = px.imshow(
+                country_fish,
+                labels=dict(x="Fish Type", y="Country", color="Count"),
+                title="Fish Type Distribution by Top Countries",
+                color_continuous_scale='RdYlBu',
+                aspect='auto'
+            )
+            fig_country_fish.update_xaxes(tickangle=-45)
+            st.plotly_chart(fig_country_fish, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # 3. REFERRAL SOURCE EFFECTIVENESS
+    st.markdown("## 📣 Referral Source Analysis")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Completion time by referral source
+        st.markdown("### Avg Completion Time by Source")
+        if 'Total_Survey_Time' in df.columns:
+            time_by_source = df.groupby('Referral_Source')['Total_Survey_Time'].mean().sort_values(ascending=False)
+            fig_source_time = px.bar(
+                x=time_by_source.values,
+                y=time_by_source.index,
+                orientation='h',
+                title="Average Time by Referral Source",
+                labels={'x': 'Avg Time (seconds)', 'y': 'Source'},
+                color=time_by_source.values,
+                color_continuous_scale='Oranges'
+            )
+            st.plotly_chart(fig_source_time, use_container_width=True)
+    
+    with col2:
+        # Fish type diversity by referral source
+        st.markdown("### Fish Type Diversity by Source")
+        source_diversity = df.groupby('Referral_Source')['Fish_Name'].nunique().sort_values(ascending=False)
+        fig_source_div = px.bar(
+            x=source_diversity.values,
+            y=source_diversity.index,
+            orientation='h',
+            title="Unique Fish Types per Source",
+            labels={'x': 'Number of Unique Fish Types', 'y': 'Source'},
+            color=source_diversity.values,
+            color_continuous_scale='Viridis'
+        )
+        st.plotly_chart(fig_source_div, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # 4. RESPONSE PATTERNS OVER TIME
+    st.markdown("## 📅 Temporal Patterns")
+    
+    if 'Timestamp' in df.columns:
+        df['Hour'] = pd.to_datetime(df['Timestamp']).dt.hour
+        df['DayOfWeek'] = pd.to_datetime(df['Timestamp']).dt.day_name()
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Hourly distribution
+            hourly_counts = df['Hour'].value_counts().sort_index()
+            fig_hourly = px.line(
+                x=hourly_counts.index,
+                y=hourly_counts.values,
+                title="Response Distribution by Hour of Day",
+                labels={'x': 'Hour (24h)', 'y': 'Number of Responses'},
+                markers=True
+            )
+            st.plotly_chart(fig_hourly, use_container_width=True)
+        
+        with col2:
+            # Day of week distribution
+            day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            day_counts = df['DayOfWeek'].value_counts().reindex(day_order, fill_value=0)
+            fig_dow = px.bar(
+                x=day_counts.index,
+                y=day_counts.values,
+                title="Response Distribution by Day of Week",
+                labels={'x': 'Day', 'y': 'Number of Responses'},
+                color=day_counts.values,
+                color_continuous_scale='Plasma'
+            )
+            st.plotly_chart(fig_dow, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # 5. QUESTION DIFFICULTY ANALYSIS
+    st.markdown("## 🎯 Question Analysis")
+    
+    question_cols = [f'Q{i}' for i in range(1, 13)]
+    
+    # Most common answers per question
+    st.markdown("### Most Popular Answers by Question")
+    
+    popular_answers = []
+    for q in question_cols:
+        if q in df.columns:
+            mode_val = df[q].mode()[0] if len(df[q].mode()) > 0 else 'N/A'
+            mode_pct = (df[q] == mode_val).sum() / len(df) * 100
+            popular_answers.append({
+                'Question': q,
+                'Most Common Answer': mode_val,
+                'Percentage': f'{mode_pct:.1f}%',
+                'Count': (df[q] == mode_val).sum()
+            })
+    
+    popular_df = pd.DataFrame(popular_answers)
+    
+    fig_popular = px.bar(
+        popular_df,
+        x='Question',
+        y='Count',
+        title="Most Popular Answer Distribution by Question",
+        labels={'Count': 'Number of People'},
+        color='Count',
+        color_continuous_scale='Sunset',
+        hover_data=['Most Common Answer', 'Percentage']
+    )
+    st.plotly_chart(fig_popular, use_container_width=True)
+    
+    # Show table
+    st.dataframe(popular_df, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # 6. PERSONALITY DIMENSIONS CORRELATION
+    st.markdown("## 🧬 Dimension Correlations")
+    
+    # Create dimension combinations analysis
+    if all(col in df.columns for col in ['E_I', 'S_N', 'T_F', 'J_P']):
+        st.markdown("### Combined Dimension Patterns")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # E/I vs S/N
+            ei_sn = pd.crosstab(df['E_I'], df['S_N'])
+            fig_ei_sn = px.imshow(
+                ei_sn,
+                labels=dict(x="S/N", y="E/I", color="Count"),
+                title="E/I vs S/N Distribution",
+                color_continuous_scale='RdBu',
+                text_auto=True
+            )
+            st.plotly_chart(fig_ei_sn, use_container_width=True)
+        
+        with col2:
+            # T/F vs J/P
+            tf_jp = pd.crosstab(df['T_F'], df['J_P'])
+            fig_tf_jp = px.imshow(
+                tf_jp,
+                labels=dict(x="J/P", y="T/F", color="Count"),
+                title="T/F vs J/P Distribution",
+                color_continuous_scale='YlGnBu',
+                text_auto=True
+            )
+            st.plotly_chart(fig_tf_jp, use_container_width=True)
     
     # Download data option
     st.markdown("---")
