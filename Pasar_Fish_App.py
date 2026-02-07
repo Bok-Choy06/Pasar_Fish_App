@@ -472,7 +472,7 @@ countries = [
 ]
 
 def create_share_buttons(mbti_type, share_source="result_page"):
-    """Create social media share buttons - all in white box"""
+    """Create social media share buttons - all in white box with tracking"""
     
     app_url = "https://pasarfishapp-eu7kqgndtsmiy9pwfz9zrr.streamlit.app/"
     fish_name = fish_names.get(mbti_type, mbti_type)
@@ -529,36 +529,57 @@ def create_share_buttons(mbti_type, share_source="result_page"):
             <h3 style="text-align: center; color: #333; margin-bottom: 2rem;">📢 Share Your Results!</h3>
             <div class="share-icons">
                 <div style="text-align: center;">
-                    <a href="https://www.instagram.com/" target="_blank">
+                    <a href="https://www.instagram.com/" target="_blank" onclick="return true;">
                         <i class="fab fa-instagram" style="font-size: 48px; color: #E4405F;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + x_url + """ target="_blank">
+                    <a href=""" + x_url + """ target="_blank" onclick="return true;">
                         <i class="fab fa-x-twitter" style="font-size: 48px; color: #000000;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + linkedin_url + """ target="_blank">
+                    <a href=""" + linkedin_url + """ target="_blank" onclick="return true;">
                         <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + whatsapp_url + """ target="_blank">
+                    <a href=""" + whatsapp_url + """ target="_blank" onclick="return true;">
                         <i class="fab fa-whatsapp" style="font-size: 48px; color: #25D366;"></i>
                     </a>
                 </div>
                 <div style="text-align: center;">
-                    <a href=""" + telegram_url + """ target="_blank">
+                    <a href=""" + telegram_url + """ target="_blank" onclick="return true;">
                         <i class="fab fa-telegram" style="font-size: 48px; color: #0088cc;"></i>
                     </a>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 1rem; color: #666;">
-                💡 Click on the icons to share!
+                💡 Click icons to share! For Instagram, screenshot this page.
             </div>
         </div>
     """, unsafe_allow_html=True)
+    
+    # Add trackable buttons below for analytics
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    with col1:
+        if st.button("📸", key="track_instagram", help="Instagram", use_container_width=True):
+            track_click("share", "Instagram", mbti_type, share_source)
+    with col2:
+        if st.button("𝕏", key="track_x", help="X/Twitter", use_container_width=True):
+            track_click("share", "X/Twitter", mbti_type, share_source)
+    with col3:
+        if st.button("💼", key="track_linkedin", help="LinkedIn", use_container_width=True):
+            track_click("share", "LinkedIn", mbti_type, share_source)
+    with col4:
+        if st.button("💬", key="track_whatsapp", help="WhatsApp", use_container_width=True):
+            track_click("share", "WhatsApp", mbti_type, share_source)
+    with col5:
+        if st.button("✈️", key="track_telegram", help="Telegram", use_container_width=True):
+            track_click("share", "Telegram", mbti_type, share_source)
+    
+    st.caption("👆 Click the emoji buttons above to log your share for our analytics!")
     
 def show_follow_section():
     """Display Follow Pasar Fish section - reusable across all pages"""
@@ -570,35 +591,56 @@ def show_follow_section():
             </div>
             <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 2rem;">
                 <div style="text-align: center; padding: 1rem;">
-                    <a href="https://pasarfish.com" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <a href="https://pasarfish.com" target="_blank" style="text-decoration: none;">
                         <i class="fas fa-globe" style="font-size: 48px; color: #4CAF50;"></i>
-                        <span style="font-size: 14px; color: #4A90E2; font-weight: bold;">Pasarfish.com</span>
+                        <br><br>
+                        <span style="font-size: 14px; color: #4A90E2;">Pasarfish.com</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
-                    <a href="https://instagram.com/pasarfishsg" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <a href="https://instagram.com/pasarfishsg" target="_blank" style="text-decoration: none;">
                         <i class="fab fa-instagram" style="font-size: 48px; color: #E4405F;"></i>
-                        <span style="font-size: 14px; color: #4A90E2; font-weight: bold;">@Pasarfishsg</span>
+                        <br><br>
+                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
-                    <a href="https://linkedin.com/company/pasarfish" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <a href="https://linkedin.com/company/pasarfish" target="_blank" style="text-decoration: none;">
                         <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
-                        <span style="font-size: 14px; color: #4A90E2; font-weight: bold;">@Pasarfish</span>
+                        <br><br>
+                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfish</span>
                     </a>
                 </div>
                 <div style="text-align: center; padding: 1rem;">
-                    <a href="https://www.facebook.com/p/Pasarfishsg-61568193013803/" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <a href="https://www.facebook.com/p/Pasarfishsg-61568193013803/" target="_blank" style="text-decoration: none;">
                         <i class="fab fa-facebook" style="font-size: 48px; color: #1877F2;"></i>
-                        <span style="font-size: 14px; color: #4A90E2; font-weight: bold;">@Pasarfishsg</span>
+                        <br><br>
+                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
                     </a>
                 </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
     
-def track_share(platform, mbti_type, source):
-    """Track share button clicks to Google Sheets"""
+    # Add trackable buttons for analytics
+    st.caption("Click below to track your follow for our analytics:")
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if st.button("🌐 Website", key=f"track_website_{id(st)}", use_container_width=True):
+            track_click("follow", "Website", None, "follow_section")
+    with col2:
+        if st.button("📸 Instagram", key=f"track_ig_follow_{id(st)}", use_container_width=True):
+            track_click("follow", "Instagram", None, "follow_section")
+    with col3:
+        if st.button("💼 LinkedIn", key=f"track_li_follow_{id(st)}", use_container_width=True):
+            track_click("follow", "LinkedIn", None, "follow_section")
+    with col4:
+        if st.button("👍 Facebook", key=f"track_fb_follow_{id(st)}", use_container_width=True):
+            track_click("follow", "Facebook", None, "follow_section")
+    
+def track_click(click_type, platform, mbti_type=None, source=None):
+    """Track button clicks (shares and follows) to Google Sheets"""
     try:
         client = get_gsheet_connection()
         if client is None:
@@ -607,25 +649,32 @@ def track_share(platform, mbti_type, source):
         sheet_name = st.secrets.get("sheet_name", "MBTI_Survey_Responses")
         spreadsheet = client.open(sheet_name)
         
-        # Try to get or create the 'Shares' worksheet
+        # Try to get or create the 'Clicks' worksheet
         try:
-            shares_sheet = spreadsheet.worksheet("Shares")
+            clicks_sheet = spreadsheet.worksheet("Clicks")
         except:
             # Create it if it doesn't exist
-            shares_sheet = spreadsheet.add_worksheet(title="Shares", rows="1000", cols="5")
-            shares_sheet.append_row(["Timestamp", "Platform", "MBTI_Type", "Source", "URL"])
+            clicks_sheet = spreadsheet.add_worksheet(title="Clicks", rows="10000", cols="6")
+            clicks_sheet.append_row(["Timestamp", "Click_Type", "Platform", "MBTI_Type", "Source", "User_Session"])
         
-        # Add share data
-        share_data = [
+        # Add click data
+        import uuid
+        session_id = st.session_state.get('session_id', str(uuid.uuid4()))
+        if 'session_id' not in st.session_state:
+            st.session_state.session_id = session_id
+            
+        click_data = [
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            platform,
-            mbti_type,
-            source,
-            "your-app-url.streamlit.app"  # UPDATE THIS
+            click_type,  # "share" or "follow"
+            platform,    # "instagram", "facebook", "linkedin", etc.
+            mbti_type if mbti_type else "N/A",
+            source if source else "unknown",
+            session_id
         ]
-        shares_sheet.append_row(share_data)
+        clicks_sheet.append_row(click_data)
     except Exception as e:
-        st.error(f"Error tracking share: {e}")
+        # Silently fail to not disrupt user experience
+        pass
 
 def initialize_session_state():
     """Initialize session state variables"""
@@ -1147,32 +1196,114 @@ def analytics_page():
         st.plotly_chart(fig_bar, use_container_width=True)
     
     st.markdown("---")
-    
-    # Dimension Analysis
-    st.markdown("## 🔍 Dimension Breakdown")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    dimensions = [
-        ('E_I', 'E vs I', col1),
-        ('S_N', 'S vs N', col2),
-        ('T_F', 'T vs F', col3),
-        ('J_P', 'J vs P', col4)
-    ]
-    
-    for dim_col, dim_name, col in dimensions:
-        with col:
-            dim_counts = df[dim_col].value_counts()
-            fig = px.pie(
-                values=dim_counts.values,
-                names=dim_counts.index,
-                title=dim_name,
-                hole=0.4
-            )
-            fig.update_traces(textposition='inside', textinfo='percent+label')
-            st.plotly_chart(fig, use_container_width=True)
-    
+
     st.markdown("---")
+    
+    # CLICK TRACKING ANALYTICS
+    st.markdown("## 🖱️ Share & Follow Click Analytics")
+    
+    # Load click data from Google Sheets
+    try:
+        client = get_gsheet_connection()
+        if client:
+            sheet_name = st.secrets.get("sheet_name", "MBTI_Survey_Responses")
+            spreadsheet = client.open(sheet_name)
+            
+            try:
+                clicks_sheet = spreadsheet.worksheet("Clicks")
+                clicks_data = clicks_sheet.get_all_records()
+                
+                if clicks_data:
+                    clicks_df = pd.DataFrame(clicks_data)
+                    
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        # Share clicks by platform
+                        st.markdown("### 📢 Share Button Clicks")
+                        share_clicks = clicks_df[clicks_df['Click_Type'] == 'share']
+                        if len(share_clicks) > 0:
+                            share_counts = share_clicks['Platform'].value_counts()
+                            fig_share = px.bar(
+                                x=share_counts.index,
+                                y=share_counts.values,
+                                title="Share Clicks by Platform",
+                                labels={'x': 'Platform', 'y': 'Clicks'},
+                                color=share_counts.values,
+                                color_continuous_scale='Reds'
+                            )
+                            st.plotly_chart(fig_share, use_container_width=True)
+                            
+                            # Show metrics
+                            st.metric("Total Share Clicks", len(share_clicks))
+                            st.metric("Most Shared Platform", share_counts.idxmax())
+                        else:
+                            st.info("No share clicks tracked yet")
+                    
+                    with col2:
+                        # Follow clicks by platform
+                        st.markdown("### 🌐 Follow Button Clicks")
+                        follow_clicks = clicks_df[clicks_df['Click_Type'] == 'follow']
+                        if len(follow_clicks) > 0:
+                            follow_counts = follow_clicks['Platform'].value_counts()
+                            fig_follow = px.bar(
+                                x=follow_counts.index,
+                                y=follow_counts.values,
+                                title="Follow Clicks by Platform",
+                                labels={'x': 'Platform', 'y': 'Clicks'},
+                                color=follow_counts.values,
+                                color_continuous_scale='Greens'
+                            )
+                            st.plotly_chart(fig_follow, use_container_width=True)
+                            
+                            # Show metrics
+                            st.metric("Total Follow Clicks", len(follow_clicks))
+                            st.metric("Most Followed Platform", follow_counts.idxmax())
+                        else:
+                            st.info("No follow clicks tracked yet")
+                    
+                    # Click timeline
+                    st.markdown("### 📅 Click Activity Over Time")
+                    clicks_df['Date'] = pd.to_datetime(clicks_df['Timestamp']).dt.date
+                    daily_clicks = clicks_df.groupby(['Date', 'Click_Type']).size().reset_index(name='Clicks')
+                    
+                    fig_timeline = px.line(
+                        daily_clicks,
+                        x='Date',
+                        y='Clicks',
+                        color='Click_Type',
+                        title="Daily Click Activity",
+                        markers=True
+                    )
+                    st.plotly_chart(fig_timeline, use_container_width=True)
+                    
+                    # Shares by fish type
+                    if 'MBTI_Type' in clicks_df.columns:
+                        share_by_fish = share_clicks[share_clicks['MBTI_Type'] != 'N/A']
+                        if len(share_by_fish) > 0:
+                            st.markdown("### 🐟 Most Shared Fish Types")
+                            fish_share_counts = share_by_fish['MBTI_Type'].value_counts().head(10)
+                            
+                            # Map to fish names
+                            fish_share_names = fish_share_counts.index.map(lambda x: fish_names.get(x, x))
+                            
+                            fig_fish_shares = px.bar(
+                                x=fish_share_names,
+                                y=fish_share_counts.values,
+                                title="Top 10 Most Shared Fish Types",
+                                labels={'x': 'Fish Type', 'y': 'Shares'},
+                                color=fish_share_counts.values,
+                                color_continuous_scale='Sunset'
+                            )
+                            fig_fish_shares.update_xaxes(tickangle=-45)
+                            st.plotly_chart(fig_fish_shares, use_container_width=True)
+                    
+                else:
+                    st.info("No click tracking data available yet. Share and follow buttons have been updated with tracking!")
+            except:
+                st.info("Click tracking sheet not found. It will be created automatically when users start clicking share/follow buttons.")
+    except Exception as e:
+        st.warning("Unable to load click tracking data")
     
     # Demographics Analysis
     st.markdown("## 👥 Demographics")
@@ -1215,31 +1346,6 @@ def analytics_page():
         color_continuous_scale='Greens'
     )
     st.plotly_chart(fig_occupation, use_container_width=True)
-    
-    st.markdown("---")
-    
-    # Question Analysis
-    st.markdown("## 📝 Question Response Analysis")
-    
-    question_cols = [f'Q{i}' for i in range(1, 13)]
-    
-    # Create a grid of small charts
-    cols_per_row = 3
-    for i in range(0, len(question_cols), cols_per_row):
-        cols = st.columns(cols_per_row)
-        for j in range(cols_per_row):
-            if i + j < len(question_cols):
-                q_col = question_cols[i + j]
-                with cols[j]:
-                    q_counts = df[q_col].value_counts()
-                    fig = px.pie(
-                        values=q_counts.values,
-                        names=q_counts.index,
-                        title=f"{q_col} Responses",
-                        hole=0.3
-                    )
-                    fig.update_traces(textposition='inside', textinfo='percent')
-                    st.plotly_chart(fig, use_container_width=True)
     
     st.markdown("---")
     
@@ -1330,69 +1436,6 @@ def analytics_page():
             )
             st.plotly_chart(fig_box, use_container_width=True)
         
-        # Question-by-question time analysis
-        st.markdown("### 🔍 Time Per Question")
-        
-        question_time_cols = [f'Q{i}_Time' for i in range(1, 13)]
-        
-        # Check if individual question time columns exist
-        if all(col in df.columns for col in question_time_cols):
-            # Calculate average time per question
-            avg_times = []
-            for q_col in question_time_cols:
-                avg_times.append({
-                    'Question': q_col.replace('_Time', ''),
-                    'Average Time (seconds)': df[q_col].mean()
-                })
-            
-            time_df = pd.DataFrame(avg_times)
-            
-            # Bar chart of average time per question
-            fig_question_time = px.bar(
-                time_df,
-                x='Question',
-                y='Average Time (seconds)',
-                title="Average Time Spent on Each Question",
-                color='Average Time (seconds)',
-                color_continuous_scale='Teal',
-                labels={'Average Time (seconds)': 'Avg Time (sec)'}
-            )
-            st.plotly_chart(fig_question_time, use_container_width=True)
-            
-            # Show which questions take longest
-            time_df_sorted = time_df.sort_values('Average Time (seconds)', ascending=False)
-            
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("**⏰ Longest Questions:**")
-                for idx, row in time_df_sorted.head(3).iterrows():
-                    st.write(f"{row['Question']}: {row['Average Time (seconds)']:.1f}s")
-            
-            with col2:
-                st.markdown("**⚡ Fastest Questions:**")
-                for idx, row in time_df_sorted.tail(3).iterrows():
-                    st.write(f"{row['Question']}: {row['Average Time (seconds)']:.1f}s")
-            
-            # Time by Fish Type
-            st.markdown("### 🐟 Completion Time by Fish Type")
-            
-            time_by_type = df.groupby('Fish_Name')['Total_Survey_Time'].agg(['mean', 'count']).reset_index()
-            time_by_type = time_by_type[time_by_type['count'] >= 2]  # Only show types with 2+ responses
-            time_by_type = time_by_type.sort_values('mean', ascending=False)
-            
-            if len(time_by_type) > 0:
-                fig_type_time = px.bar(
-                    time_by_type,
-                    x='Fish_Name',
-                    y='mean',
-                    title="Average Completion Time by Fish Type",
-                    labels={'mean': 'Average Time (seconds)', 'Fish_Name': 'Fish Type'},
-                    color='mean',
-                    color_continuous_scale='Sunset'
-                )
-                fig_type_time.update_xaxes(tickangle=-45)
-                st.plotly_chart(fig_type_time, use_container_width=True)
     else:
         st.info("⏱️ Time tracking data not available for this dataset.")
 
