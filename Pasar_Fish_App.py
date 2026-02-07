@@ -472,7 +472,7 @@ countries = [
 ]
 
 def create_share_buttons(mbti_type, share_source="result_page"):
-    """Create social media share buttons - all in white box with tracking"""
+    """Create social media share buttons with click tracking"""
     
     app_url = "https://pasarfishapp-eu7kqgndtsmiy9pwfz9zrr.streamlit.app/"
     fish_name = fish_names.get(mbti_type, mbti_type)
@@ -485,159 +485,78 @@ def create_share_buttons(mbti_type, share_source="result_page"):
     telegram_url = "https://t.me/share/url?url=" + quote(app_url) + "&text=" + quote(share_text)
     
     st.markdown("""
-        <style>
-        /* Share buttons - responsive layout */
-        .share-container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin: 2rem auto;
-            max-width: 900px;
-        }
-        
-        .share-icons {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            padding: 1rem;
-        }
-        
-        /* Mobile: single row, smaller icons, tighter spacing */
-        @media (max-width: 768px) {
-            .share-icons {
-                flex-wrap: nowrap !important;
-                gap: 0.5rem !important;
-                padding: 0.5rem !important;
-                overflow-x: auto;
-                justify-content: space-between;
-            }
-            
-            .share-icons i {
-                font-size: 36px !important;
-            }
-            
-            .share-container {
-                padding: 1rem !important;
-            }
-        }
-        </style>
-        
-        <div class="share-container">
+        <div style="background-color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 2rem auto; max-width: 900px;">
             <h3 style="text-align: center; color: #333; margin-bottom: 2rem;">📢 Share Your Results!</h3>
-            <div class="share-icons">
-                <div style="text-align: center;">
-                    <a href="https://www.instagram.com/" target="_blank" onclick="return true;">
-                        <i class="fab fa-instagram" style="font-size: 48px; color: #E4405F;"></i>
-                    </a>
-                </div>
-                <div style="text-align: center;">
-                    <a href=""" + x_url + """ target="_blank" onclick="return true;">
-                        <i class="fab fa-x-twitter" style="font-size: 48px; color: #000000;"></i>
-                    </a>
-                </div>
-                <div style="text-align: center;">
-                    <a href=""" + linkedin_url + """ target="_blank" onclick="return true;">
-                        <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
-                    </a>
-                </div>
-                <div style="text-align: center;">
-                    <a href=""" + whatsapp_url + """ target="_blank" onclick="return true;">
-                        <i class="fab fa-whatsapp" style="font-size: 48px; color: #25D366;"></i>
-                    </a>
-                </div>
-                <div style="text-align: center;">
-                    <a href=""" + telegram_url + """ target="_blank" onclick="return true;">
-                        <i class="fab fa-telegram" style="font-size: 48px; color: #0088cc;"></i>
-                    </a>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 1rem; color: #666;">
-                💡 Click icons to share! For Instagram, screenshot this page.
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Create clickable icon buttons
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    share_links = {
+        'Instagram': ('https://www.instagram.com/', '📸 Instagram', '#E4405F'),
+        'X/Twitter': (x_url, '𝕏 X', '#000000'),
+        'LinkedIn': (linkedin_url, '💼 LinkedIn', '#0077B5'),
+        'WhatsApp': (whatsapp_url, '💬 WhatsApp', '#25D366'),
+        'Telegram': (telegram_url, '✈️ Telegram', '#0088cc')
+    }
+    
+    cols = [col1, col2, col3, col4, col5]
+    platforms = ['Instagram', 'X/Twitter', 'LinkedIn', 'WhatsApp', 'Telegram']
+    
+    for col, platform in zip(cols, platforms):
+        url, label, color = share_links[platform]
+        with col:
+            if st.button(label, key=f"share_{platform}_{mbti_type}", use_container_width=True):
+                track_click("share", platform, mbti_type, share_source)
+                st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                st.success(f"Opening {platform}...")
+    
+    st.markdown("""
+        <div style="background-color: white; padding: 0 2rem 2rem 2rem; border-radius: 0 0 15px 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: -2rem auto 2rem auto; max-width: 900px;">
+            <div style="text-align: center; color: #666;">
+                💡 Click buttons to share! For Instagram, screenshot this page.
             </div>
         </div>
     """, unsafe_allow_html=True)
     
-    # Add trackable buttons below for analytics
-    col1, col2, col3, col4, col5 = st.columns(5)
-    
-    with col1:
-        if st.button("📸", key="track_instagram", help="Instagram", use_container_width=True):
-            track_click("share", "Instagram", mbti_type, share_source)
-    with col2:
-        if st.button("𝕏", key="track_x", help="X/Twitter", use_container_width=True):
-            track_click("share", "X/Twitter", mbti_type, share_source)
-    with col3:
-        if st.button("💼", key="track_linkedin", help="LinkedIn", use_container_width=True):
-            track_click("share", "LinkedIn", mbti_type, share_source)
-    with col4:
-        if st.button("💬", key="track_whatsapp", help="WhatsApp", use_container_width=True):
-            track_click("share", "WhatsApp", mbti_type, share_source)
-    with col5:
-        if st.button("✈️", key="track_telegram", help="Telegram", use_container_width=True):
-            track_click("share", "Telegram", mbti_type, share_source)
-    
-    st.caption("👆 Click the emoji buttons above to log your share for our analytics!")
-    
 def show_follow_section():
-    """Display Follow Pasar Fish section - reusable across all pages"""
+    """Display Follow Pasar Fish section with click tracking"""
+    
     st.markdown("""
         <div style="background-color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 2rem auto; max-width: 900px;">
             <div style="text-align: center; margin-bottom: 2rem;">
-                <h3 style="color: #333; margin-bottom: 0.5rem;">🌐 Follow Pasarfish!</h3>
+                <h3 style="color: #333; margin-bottom: 0.5rem;">🌐 Follow Pasar Fish!</h3>
                 <p style="color: #666;">Stay connected with us for more fishy adventures:</p>
-            </div>
-            <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 2rem;">
-                <div style="text-align: center; padding: 1rem;">
-                    <a href="https://pasarfish.com" target="_blank" style="text-decoration: none;">
-                        <i class="fas fa-globe" style="font-size: 48px; color: #4CAF50;"></i>
-                        <br><br>
-                        <span style="font-size: 14px; color: #4A90E2;">Pasarfish.com</span>
-                    </a>
-                </div>
-                <div style="text-align: center; padding: 1rem;">
-                    <a href="https://instagram.com/pasarfishsg" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-instagram" style="font-size: 48px; color: #E4405F;"></i>
-                        <br><br>
-                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
-                    </a>
-                </div>
-                <div style="text-align: center; padding: 1rem;">
-                    <a href="https://linkedin.com/company/pasarfish" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-linkedin" style="font-size: 48px; color: #0077B5;"></i>
-                        <br><br>
-                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfish</span>
-                    </a>
-                </div>
-                <div style="text-align: center; padding: 1rem;">
-                    <a href="https://www.facebook.com/p/Pasarfishsg-61568193013803/" target="_blank" style="text-decoration: none;">
-                        <i class="fab fa-facebook" style="font-size: 48px; color: #1877F2;"></i>
-                        <br><br>
-                        <span style="font-size: 14px; color: #4A90E2;">@Pasarfishsg</span>
-                    </a>
-                </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
     
-    # Add trackable buttons for analytics
-    st.caption("Click below to track your follow for our analytics:")
+    # Create clickable follow buttons
     col1, col2, col3, col4 = st.columns(4)
     
-    with col1:
-        if st.button("🌐 Website", key=f"track_website_{id(st)}", use_container_width=True):
-            track_click("follow", "Website", None, "follow_section")
-    with col2:
-        if st.button("📸 Instagram", key=f"track_ig_follow_{id(st)}", use_container_width=True):
-            track_click("follow", "Instagram", None, "follow_section")
-    with col3:
-        if st.button("💼 LinkedIn", key=f"track_li_follow_{id(st)}", use_container_width=True):
-            track_click("follow", "LinkedIn", None, "follow_section")
-    with col4:
-        if st.button("👍 Facebook", key=f"track_fb_follow_{id(st)}", use_container_width=True):
-            track_click("follow", "Facebook", None, "follow_section")
+    follow_links = {
+        'Website': ('https://pasarfish.com', '🌐 Pasarfish.com'),
+        'Instagram': ('https://instagram.com/pasarfishsg', '📸 @Pasarfishsg'),
+        'LinkedIn': ('https://linkedin.com/company/pasarfish', '💼 @Pasarfish'),
+        'Facebook': ('https://www.facebook.com/p/Pasarfishsg-61568193013803/', '👍 @Pasarfishsg')
+    }
+    
+    cols = [col1, col2, col3, col4]
+    platforms = ['Website', 'Instagram', 'LinkedIn', 'Facebook']
+    
+    for col, platform in zip(cols, platforms):
+        url, label = follow_links[platform]
+        with col:
+            if st.button(label, key=f"follow_{platform}_{id(st)}", use_container_width=True):
+                track_click("follow", platform, None, "follow_section")
+                st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                st.success(f"Opening {platform}...")
+    
+    st.markdown("""
+        <div style="background-color: white; padding: 0 2rem 2rem 2rem; border-radius: 0 0 15px 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: -2rem auto 2rem auto; max-width: 900px;">
+        </div>
+    """, unsafe_allow_html=True)
     
 def track_click(click_type, platform, mbti_type=None, source=None):
     """Track button clicks (shares and follows) to Google Sheets"""
